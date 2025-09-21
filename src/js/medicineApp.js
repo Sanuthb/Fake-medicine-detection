@@ -32,17 +32,22 @@ App = {
 
     bindEvents: function() {
 
-        $(document).on('click','.btn-register',App.sellMedicine);
+        $(document).on('click','.btn-register',App.registerMedicine);
     },
 
-    sellMedicine: function(event) {
+    registerMedicine: function(event) {
         event.preventDefault();
 
         var medicineInstance;
 
+        var manufacturerID = document.getElementById('manufacturerID').value;
+        var medicineName = document.getElementById('medicineName').value;
         var medicineBatch = document.getElementById('medicineBatch').value;
-        var patientCode = document.getElementById('patientCode').value;
- 
+        var medicineBrand = document.getElementById('medicineBrand').value;
+        var medicinePrice = document.getElementById('medicinePrice').value;
+        var expiryDate = document.getElementById('expiryDate').value;
+        var composition = document.getElementById('composition').value;
+
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
 
@@ -55,10 +60,26 @@ App = {
 
             App.contracts.medicine.deployed().then(function(instance){
                 medicineInstance=instance;
-                return medicineInstance.pharmacySellMedicine(web3.fromAscii(medicineBatch),web3.fromAscii(patientCode), {from:account});
+                return medicineInstance.addMedicine(
+                    web3.fromAscii(manufacturerID),
+                    web3.fromAscii(medicineName), 
+                    web3.fromAscii(medicineBatch), 
+                    web3.fromAscii(medicineBrand), 
+                    medicinePrice, 
+                    web3.fromAscii(expiryDate), 
+                    web3.fromAscii(composition), 
+                    {from:account}
+                );
              }).then(function(result){
                 console.log(result);
-                window.location.reload();
+
+                document.getElementById('manufacturerID').value='';
+                document.getElementById('medicineName').value='';
+                document.getElementById('medicineBatch').value='';
+                document.getElementById('medicineBrand').value='';
+                document.getElementById('medicinePrice').value='';
+                document.getElementById('expiryDate').value='';
+                document.getElementById('composition').value='';
 
             }).catch(function(err){
                 console.log(err.message);

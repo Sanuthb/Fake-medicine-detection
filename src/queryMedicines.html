@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Fake Product Identification</title>
+  	<title>Fake Medicine Identification</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
@@ -16,7 +16,7 @@
 				<div class="col-md-8 order-md-last">
 					<div class="row">
 						<div class="col-md-6 text-center">
-							<a class="navbar-brand" href="index.html">Fake Product Identification <span>through Blockchain</span></a>
+							<a class="navbar-brand" href="index.html">Fake Medicine Identification <span>through Blockchain</span></a>
 						</div>
 						<div class="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">
 							<form action="#" class="searchform order-lg-last">
@@ -42,46 +42,41 @@
 	        <ul class="navbar-nav m-auto">
 	        	<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
 			  	<li class="nav-item "><a href="manufacturer.html" class="nav-link">Manufacturer</a></li>
-	        	<li class="nav-item"><a href="seller.html" class="nav-link">Seller</a></li>
-	          	<li class="nav-item"><a href="consumer.html" class="nav-link">Consumer</a></li>
+	        	<li class="nav-item"><a href="pharmacy.html" class="nav-link">Pharmacy</a></li>
+	          	<li class="nav-item"><a href="patient.html" class="nav-link">Patient</a></li>
 	        </ul>
 	      </div>
 	    </div>
 	  </nav>
     <!-- END nav -->
 
-
-	</section>
-
 	<section>
         <div class="container">
-            <h2>Prodcuts for sale with the seller</h2>
+            <h2>Medicines for sale with the pharmacy</h2>
               
               <div class="form-group">
-                <label for="name">Seller Code</label>
-                <input type="text" class="form-control" id="sellerCode" placeholder="Enter Seller Code" name="sellerCode">
+                <label for="name">Pharmacy Code</label>
+                <input type="text" class="form-control" id="pharmacyCode" placeholder="Enter Pharmacy Code" name="pharmacyCode">
               </div>
-          
-              
               
               <button type="submit" class="btn btn-warning btn-register" id="register">Submit</button>
           </div>
     </section>
 
-
     <section>
         <div class="container">
-            <h2>Product Details</h2>
+            <h2>Medicine Details</h2>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Product ID</th>
-                        <th>Product Serial Number</th>
-                        <th>Product Name</th>
-						<th>Product Brand</th>
-						<th>Product Price</th>
-						<th>Product Status</th>
-
+                        <th>Medicine ID</th>
+                        <th>Medicine Batch No</th>
+                        <th>Medicine Name</th>
+						<th>Medicine Brand</th>
+						<th>Medicine Price</th>
+						<th>Medicine Status</th>
+						<th>Expiry Date</th>
+						<th>Composition</th>
                     </tr>
                 </thead>
                 <tbody id="logdata">
@@ -98,6 +93,6 @@
   <script src="js/main.js"></script>
   <script src="js/web3.min.js"></script>
   <script src="js/truffle-contract.js"></script>
-  <script src="js/productDataApp.js"></script>
+  <script src="js/medicineDataApp.js"></script>
   </body>
 </html>

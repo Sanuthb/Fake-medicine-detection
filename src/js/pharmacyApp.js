@@ -11,7 +11,7 @@ App = {
         if(window.web3) {
             App.web3Provider=window.web3.currentProvider;
         } else {
-            App.web3Provider=new Web3.proviers.HttpProvider('http://localhost:7545');
+            App.web3Provider=new Web3.proviers.HttpProvider('http://127.0.0.1:7545');
         }
 
         web3 = new Web3(App.web3Provider);
@@ -32,17 +32,22 @@ App = {
 
     bindEvents: function() {
 
-        $(document).on('click','.btn-register',App.sellMedicine);
+        $(document).on('click','.btn-register',App.registerPharmacy);
     },
 
-    sellMedicine: function(event) {
+    registerPharmacy: function(event) {
         event.preventDefault();
 
         var medicineInstance;
 
-        var medicineBatch = document.getElementById('medicineBatch').value;
-        var patientCode = document.getElementById('patientCode').value;
- 
+        var pharmacyName = document.getElementById('PharmacyName').value;
+        var pharmacyLicense = document.getElementById('PharmacyLicense').value;
+        var pharmacyCode = document.getElementById('PharmacyCode').value;
+        var pharmacyPhoneNumber = document.getElementById('PharmacyPhoneNumber').value;
+        var pharmacistName = document.getElementById('PharmacistName').value;
+        var pharmacyAddress = document.getElementById('PharmacyAddress').value;
+        var manufacturerId = document.getElementById('ManufacturerId').value;
+       
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
 
@@ -55,7 +60,16 @@ App = {
 
             App.contracts.medicine.deployed().then(function(instance){
                 medicineInstance=instance;
-                return medicineInstance.pharmacySellMedicine(web3.fromAscii(medicineBatch),web3.fromAscii(patientCode), {from:account});
+                return medicineInstance.addPharmacy(
+                    web3.fromAscii(manufacturerId),
+                    web3.fromAscii(pharmacyName),
+                    web3.fromAscii(pharmacyLicense), 
+                    web3.fromAscii(pharmacyCode), 
+                    pharmacyPhoneNumber, 
+                    web3.fromAscii(pharmacistName), 
+                    web3.fromAscii(pharmacyAddress), 
+                    {from:account}
+                );
              }).then(function(result){
                 console.log(result);
                 window.location.reload();

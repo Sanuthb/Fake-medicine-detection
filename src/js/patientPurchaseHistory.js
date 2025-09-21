@@ -19,11 +19,11 @@ App = {
 
     initContract: function() {
 
-        $.getJSON('product.json',function(data){
+        $.getJSON('medicine.json',function(data){
 
-            var productArtifact=data;
-            App.contracts.product=TruffleContract(productArtifact);
-            App.contracts.product.setProvider(App.web3Provider);
+            var medicineArtifact=data;
+            App.contracts.medicine=TruffleContract(medicineArtifact);
+            App.contracts.medicine.setProvider(App.web3Provider);
         });
 
         return App.bindEvents();
@@ -36,9 +36,9 @@ App = {
 
     getData:function(event) {
         event.preventDefault();
-        var consumerCode = document.getElementById('consumerCode').value;
+        var patientCode = document.getElementById('patientCode').value;
 
-        var productInstance;
+        var medicineInstance;
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
 
@@ -47,48 +47,43 @@ App = {
             }
 
             var account=accounts[0];
-            // console.log(account);
 
-            App.contracts.product.deployed().then(function(instance){
+            App.contracts.medicine.deployed().then(function(instance){
 
-                productInstance=instance;
-                return productInstance.getPurchaseHistory(web3.fromAscii(consumerCode),{from:account});
+                medicineInstance=instance;
+                return medicineInstance.getPurchaseHistory(web3.fromAscii(patientCode),{from:account});
 
             }).then(function(result){
                 
-                var productSNs=[];
-                var sellerCodes=[];
+                var medicineBatches=[];
+                var pharmacyCodes=[];
                 var manufacturerCodes=[];
-                // console.log(result);
                 
                 for(var k=0;k<result[0].length;k++){
-                    productSNs[k]=web3.toAscii(result[0][k]);
+                    medicineBatches[k]=web3.toAscii(result[0][k]);
                 }
 
                 for(var k=0;k<result[1].length;k++){
-                    sellerCodes[k]=web3.toAscii(result[1][k]);
-
+                    pharmacyCodes[k]=web3.toAscii(result[1][k]);
                 }
 
                 for(var k=0;k<result[2].length;k++){
                     manufacturerCodes[k]=web3.toAscii(result[2][k]);
                 }
                 
-
                 var t= "";
                 document.getElementById('logdata').innerHTML = t;
                 for(var i=0;i<result[0].length;i++) {
-                    var temptr = "<td>"+sellerCodes[i]+"</td>";
+                    var temptr = "<td>"+pharmacyCodes[i]+"</td>";
                     if(temptr === "<td>0</td>"){
                         break;
                     }
                     var tr="<tr>";
-                    tr+="<td>"+productSNs[i]+"</td>";
-                    tr+="<td>"+sellerCodes[i]+"</td>";
+                    tr+="<td>"+medicineBatches[i]+"</td>";
+                    tr+="<td>"+pharmacyCodes[i]+"</td>";
                     tr+="<td>"+manufacturerCodes[i]+"</td>";
                     tr+="</tr>";
                     t+=tr;
-
                 }
                 document.getElementById('logdata').innerHTML += t;
                 document.getElementById('add').innerHTML=account;

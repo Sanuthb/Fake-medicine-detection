@@ -19,11 +19,11 @@ App = {
 
     initContract: function() {
 
-        $.getJSON('product.json',function(data){
+        $.getJSON('medicine.json',function(data){
 
-            var productArtifact=data;
-            App.contracts.product=TruffleContract(productArtifact);
-            App.contracts.product.setProvider(App.web3Provider);
+            var medicineArtifact=data;
+            App.contracts.medicine=TruffleContract(medicineArtifact);
+            App.contracts.medicine.setProvider(App.web3Provider);
         });
 
         return App.bindEvents();
@@ -36,9 +36,9 @@ App = {
 
     getData:function(event) {
         event.preventDefault();
-        var productSN = document.getElementById('productSN').value;
-        var consumerCode = document.getElementById('consumerCode').value;
-        var productInstance;
+        var medicineBatch = document.getElementById('medicineBatch').value;
+        var patientCode = document.getElementById('patientCode').value;
+        var medicineInstance;
         //window.ethereum.enable();
         web3.eth.getAccounts(function(error,accounts){
 
@@ -47,23 +47,21 @@ App = {
             }
 
             var account=accounts[0];
-            // console.log(account);
-            App.contracts.product.deployed().then(function(instance){
+            
+            App.contracts.medicine.deployed().then(function(instance){
 
-                productInstance=instance;
-                return productInstance.verifyProduct(web3.fromAscii(productSN), web3.fromAscii(consumerCode),{from:account});
+                medicineInstance=instance;
+                return medicineInstance.verifyMedicine(web3.fromAscii(medicineBatch), web3.fromAscii(patientCode),{from:account});
 
             }).then(function(result){
-                
-                // console.log(result);
 
                 var t= "";
 
                 var tr="<tr>";
                 if(result){
-                    tr+="<td>"+ "Genuine Product."+"</td>";
+                    tr+="<td>"+ "Authentic Medicine - Safe to Use"+"</td>";
                 }else{
-                    tr+="<td>"+ "Fake Product."+"</td>";
+                    tr+="<td>"+ "Fake Medicine - DO NOT USE"+"</td>";
                 }
                 tr+="</tr>";
                 t+=tr;

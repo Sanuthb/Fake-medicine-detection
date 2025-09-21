@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Fake Product Identification</title>
+  	<title>Fake Medicine Identification</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
@@ -16,7 +16,7 @@
 				<div class="col-md-8 order-md-last">
 					<div class="row">
 						<div class="col-md-6 text-center">
-							<a class="navbar-brand" href="index.html">Fake Product Identification <span>through Blockchain</span></a>
+							<a class="navbar-brand" href="index.html">Fake Medicine Identification <span>through Blockchain</span></a>
 						</div>
 						<div class="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">
 							<form action="#" class="searchform order-lg-last">
@@ -42,19 +42,18 @@
 	        <ul class="navbar-nav m-auto">
 	        	<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
 			  	<li class="nav-item "><a href="manufacturer.html" class="nav-link">Manufacturer</a></li>
-	        	<li class="nav-item"><a href="seller.html" class="nav-link">Seller</a></li>
-	          	<li class="nav-item"><a href="consumer.html" class="nav-link">Consumer</a></li>
+	        	<li class="nav-item"><a href="pharmacy.html" class="nav-link">Pharmacy</a></li>
+	          	<li class="nav-item"><a href="patient.html" class="nav-link">Patient</a></li>
 	        </ul>
 	      </div>
 	    </div>
 	  </nav>
     <!-- END nav -->
-
-	</section>
-    <section>
+	
+	<section>
         <div class="container">
-            <h2>Sell Product to Seller</h2>
-
+            <h2>Verify Medicines</h2>
+              
 			<section>
 				<div class="container-fluid">
 					<center>
@@ -63,59 +62,57 @@
 					</center>
 				</div>
 			</section>
-
-			<div>
-				<table width="100%">
-					<tr width="100%">
-						<td width="15" align="center">
-							<label for="productSN">Product SN:</label>
-							</td>
-							<td width = "30%" >
-							<input disabled class="form-control" id="productSN" name="productSN" type="text" />
-						</td>
-
-						<td width="15%" align="center">
-						<label for="sellerCode">Seller Code</label>
-						</td>
-						<td width = "30%">
-						<input  class="form-control" id="sellerCode" name="sellerCode" type="text" />
-						</td>
-
-					</tr>
-                    
-						
-					</tr>
-				</table>
-			  </div>
-			  <div class="clear">&nbsp;</div>
-
-
+			  
+              <div class="form-group">
+				<label for="medicineBatch">Medicine Batch No:</label>
+                <input disabled type="text" class="form-control" id="medicineBatch" placeholder="Enter Medicine Batch No" name="medicineBatch">
+                
+				<label for="patientCode">Patient Code</label>
+                <input type="text" class="form-control" id="patientCode" placeholder="Enter Patient Code" name="patientCode">
+              </div>
               
-              
-              <button type="submit" class="btn btn-warning btn-register" id="register">Sell to Seller</button>
+              <button type="submit" class="btn btn-warning btn-register" id="register">Verify Medicine</button>
           </div>
     </section>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="js/popper.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/web3.min.js"></script>
-  <script src="js/truffle-contract.js"></script>
-  <script src="js/sellProductManufacturer.js"></script>
-  <script src="https://unpkg.com/html5-qrcode"></script>
-  <script>
-	var decodedText = "Enter Product SN";
-     function docReady(fn) {
+	<br/>
+    <section>
+        <div class="container">
+            <h2>Is the medicine sold to patient fake or authentic?</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Medicine Verification Result</th>
+                    </tr>
+                </thead>
+                <tbody id="logdata">
+
+                </tbody>
+            </table>
+            <center><p>Your address is <b id="add"></b></p></center>
+        </div>
+    </section>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/web3.min.js"></script>
+	<script src="js/truffle-contract.js"></script>
+	<script src="js/verifyMedicine.js"></script>
+	<script src="https://unpkg.com/html5-qrcode"></script>
+	<script>
+	var decodedText = "Enter Medicine Batch No";
+    function docReady(fn) {
         // see if DOM is already available
         if (document.readyState === "complete"
-           || document.readyState === "interactive") {
-	        // call on next available tick
-           setTimeout(fn, 1);
+            || document.readyState === "interactive") {
+            // call on next available tick
+            setTimeout(fn, 1);
         } else {
             document.addEventListener("DOMContentLoaded", fn);
         }
-    } 
+    }
 
     docReady(function () {
         var resultContainer = document.getElementById('qr-reader-results');
@@ -127,11 +124,8 @@
                 // Handle on success condition with the decoded message.
                 var audio = new Audio('beep.wav');
                 audio.play();
-                // console.log(`Scan result ${decodedText}`, decodedResult);
                 document.getElementById('qr-reader-results').innerHTML=decodedText;
-				document.getElementById("productSN").value = decodedText;
-				//App.init(decodedText);
-                
+				document.getElementById("medicineBatch").value = decodedText;
             }
         }
 

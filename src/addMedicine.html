@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Fake Product Identification</title>
+  	<title>Fake Medicine Identification</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
@@ -17,7 +17,7 @@
 				<div class="col-md-8 order-md-last">
 					<div class="row">
 						<div class="col-md-6 text-center">
-							<a class="navbar-brand" href="index.html">Fake Product Identification <span>through Blockchain</span></a>
+							<a class="navbar-brand" href="index.html">Fake Medicine Identification <span>through Blockchain</span></a>
 						</div>
 						<div class="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">
 							<form action="#" class="searchform order-lg-last">
@@ -43,8 +43,8 @@
 	        <ul class="navbar-nav m-auto">
 	        	<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
 			  	<li class="nav-item "><a href="manufacturer.html" class="nav-link">Manufacturer</a></li>
-	        	<li class="nav-item"><a href="seller.html" class="nav-link">Seller</a></li>
-	          	<li class="nav-item"><a href="consumer.html" class="nav-link">Consumer</a></li>
+	        	<li class="nav-item"><a href="pharmacy.html" class="nav-link">Pharmacy</a></li>
+	          	<li class="nav-item"><a href="patient.html" class="nav-link">Patient</a></li>
 	        </ul>
 	      </div>
 	    </div>
@@ -54,9 +54,7 @@
 	</section>
     <section>
         <div class="container">
-            <h2>Add Product</h2>
-
-
+            <h2>Add Medicine</h2>
 
 			<div class="matrix">
 				<table width="100%">
@@ -68,51 +66,62 @@
 						<input  class="form-control" id="manufacturerID" name="Manufacturer ID" type="text" />
 						</td>
 						<td width="15" align="center">
-						<label for="name">Product Name</label>
+						<label for="name">Medicine Name</label>
 						</td>
 						<td width = "30%" >
-						<input class="form-control" id="productName" name="productName" type="text" />
+						<input class="form-control" id="medicineName" name="medicineName" type="text" />
 						</td>
 					</tr>
 
 					<tr width="100%">
 						<td width="15%" align="center">
-						<label for="productSN">Product SN:</label>
+						<label for="medicineBatch">Medicine Batch No:</label>
 						</td>
 						<td width = "30%">
-						<input  class="form-control" id="productSN" name="productSN" type="text" />
+						<input  class="form-control" id="medicineBatch" name="medicineBatch" type="text" />
 						</td>
 						<td width="15" align="center">
-						<label for="name">Product Brand</label>
+						<label for="name">Medicine Brand</label>
 						</td>
 						<td width = "30%" >
-						<input class="form-control" id="productBrand" name="productBrand" type="text" />
+						<input class="form-control" id="medicineBrand" name="medicineBrand" type="text" />
 						</td>
 					</tr>
-
 
 					<tr width="100%">
 						<td width="15%" align="center">
-						<label for="productPrice">Product Price</label>
+						<label for="medicinePrice">Medicine Price</label>
 						</td>
 						<td width = "30%">
-						<input  class="form-control" id="productPrice" name="productPrice" type="text" />
+						<input  class="form-control" id="medicinePrice" name="medicinePrice" type="text" />
+						</td>
+						<td width="15" align="center">
+						<label for="expiryDate">Expiry Date</label>
+						</td>
+						<td width = "30%" >
+						<input class="form-control" id="expiryDate" name="expiryDate" type="text" />
 						</td>
 					</tr>
 
-						
+					<tr width="100%">
+						<td width="15%" align="center">
+						<label for="composition">Composition</label>
+						</td>
+						<td width = "30%">
+						<input  class="form-control" id="composition" name="composition" type="text" />
+						</td>
 					</tr>
+
 				</table>
 			  </div>
 			  <div class="clear" >&nbsp;</div>
 			  <div align="center">
-				<button type="submit" class="btn btn-warning btn-register" id="register" onclick="fetchQR()">Add the Product</button>
+				<button type="submit" class="btn btn-warning btn-register" id="register" onclick="fetchQR()">Add the Medicine</button>
 			  </div>  
 			  <br></br>
           </div>
     </section>
 
-<!-- <br></br>	 -->
 	<div class="qr-code">
 		<div align="center">
 			<img align="center" hidden id="imgQR" src="" alt="qr-code" >
@@ -125,30 +134,27 @@
 
 <br></br>
 
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="js/popper.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/web3.min.js"></script>
 	<script src="js/truffle-contract.js"></script>
-	<script src="js/productApp.js"></script>
+	<script src="js/medicineApp.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
 	<script>
 	var src;
 	var qrValue;
 	function fetchQR(){
-		qrValue = document.getElementById('productSN').value;
+		qrValue = document.getElementById('medicineBatch').value;
 		qrImage = document.querySelector(".qr-code");
 		qrImageResult = qrImage.querySelector("img");
 		src = qrImageResult.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrValue}`;
 		
-
 		downloadQrImg = document.getElementById('imgQR');
 		downloadQrBtn = document.getElementById('download');
 		downloadQrImg.removeAttribute('hidden');
 		downloadQrBtn.removeAttribute('hidden');
-
 	}
 
 	function saveImage(){
