@@ -53,7 +53,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -72,7 +73,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -91,7 +93,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -110,7 +113,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -129,7 +133,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -153,7 +158,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -177,7 +183,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -226,7 +233,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -250,7 +258,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -336,7 +345,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -427,7 +437,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -502,7 +513,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -531,7 +543,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -580,7 +593,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -609,7 +623,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -633,7 +648,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.12+commit.f00d7308\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_manufactuerID\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_medicineName\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_medicineBatch\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_medicineBrand\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_medicinePrice\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_expiryDate\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_composition\",\"type\":\"bytes32\"}],\"name\":\"addMedicine\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_manufacturerId\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_pharmacyName\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_pharmacyLicense\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_pharmacyCode\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_pharmacyPhone\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_pharmacistName\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_pharmacyAddress\",\"type\":\"bytes32\"}],\"name\":\"addPharmacy\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_patientCode\",\"type\":\"bytes32\"}],\"name\":\"getPurchaseHistory\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_medicineBatch\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_pharmacyCode\",\"type\":\"bytes32\"}],\"name\":\"manufacturerSellMedicine\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"medicineItems\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"medicineId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"medicineBatch\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"medicineName\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"medicineBrand\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"medicinePrice\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"medicineStatus\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"expiryDate\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"composition\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"medicineMap\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"medicinesForSale\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"medicinesManufactured\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"medicinesSold\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"medicinesWithPatient\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"medicinesWithPharmacy\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"pharmacies\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"pharmacyId\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"pharmacyName\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"pharmacyLicense\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"pharmacyCode\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pharmacyPhone\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"pharmacistName\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"pharmacyAddress\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"pharmaciesWithManufacturer\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_medicineBatch\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_patientCode\",\"type\":\"bytes32\"}],\"name\":\"pharmacySellMedicine\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_pharmacyCode\",\"type\":\"bytes32\"}],\"name\":\"queryMedicinesBasicInfo\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_pharmacyCode\",\"type\":\"bytes32\"}],\"name\":\"queryMedicinesDetailInfo\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_manufacturerCode\",\"type\":\"bytes32\"}],\"name\":\"queryPharmaciesList\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_medicineBatch\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_patientCode\",\"type\":\"bytes32\"}],\"name\":\"verifyMedicine\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"viewMedicineItems\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"viewPharmacies\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"},{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Medicine.sol\":\"Medicine\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Medicine.sol\":{\"keccak256\":\"0xb036c87bc608487f459d6a66db526d4cdd4052723f2cf8425641620619a582bb\",\"urls\":[\"bzz-raw://1ccfd38f289681900ac276267bf57ebad6e11982d61855bd9d858a24d26f5dd9\",\"dweb:/ipfs/QmcaRqhdikmaGKW8NT8s1pLpe2SvCNdULsbC8nm8XVHoxR\"]}},\"version\":1}",
@@ -23628,9 +23644,17 @@
     "name": "solc",
     "version": "0.8.12+commit.f00d7308.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0xA94c936c0344e3b02C04477AAaA5847595986F72",
+      "transactionHash": "0xb9f960ae8d23f566b4099aaae2ad25bb432f8d6e5aa7917dac76f65d6fea54eb"
+    }
+  },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-09-21T05:29:51.525Z",
+  "updatedAt": "2025-09-22T03:45:34.636Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},
