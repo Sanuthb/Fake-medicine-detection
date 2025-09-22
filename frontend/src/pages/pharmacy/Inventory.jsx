@@ -7,17 +7,17 @@ const Inventory = () => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [medicineBatch, setMedicineBatch] = useState("");
-  const [patientCode, setPatientCode] = useState("");
+  const [patientCode, setPatientCode] = useState("PA1001"); // Default patient
   const [sellMsg, setSellMsg] = useState("");
   const [selling, setSelling] = useState(false);
 
   const navigate = useNavigate();
 
-  // Fetch inventory
+  // Fetch inventory for pharmacy PH1001
   useEffect(() => {
     const fetchMedicines = async () => {
-      const { data, error } = await pharmacyAPI.getMedicinesDetail("P001"); // replace with real pharmacy code
-      if (!error) setMedicines(data);
+      const { data, error } = await pharmacyAPI.getMedicinesDetail("PH1001");
+      if (!error) setMedicines(data || []);
       setLoading(false);
     };
     fetchMedicines();
@@ -34,14 +34,19 @@ const Inventory = () => {
         medicineBatch,
         patientCode,
       });
+      
       if (error) setSellMsg(`❌ ${error}`);
-      else setSellMsg(`✅ Medicine sold! Tx: ${data.txHash}`);
+      else {
+        setSellMsg(`✅ Medicine sold to ${patientCode}! Tx: ${data.txHash}`);
+        // Refresh inventory after successful sale
+        const { data: updatedData } = await pharmacyAPI.getMedicinesDetail("PH1001");
+        if (updatedData) setMedicines(updatedData);
+      }
     } catch (err) {
       setSellMsg(`❌ Error: ${err.message || "Failed to sell medicine"}`);
     } finally {
       setSelling(false);
       setMedicineBatch("");
-      setPatientCode("");
     }
   };
 
@@ -51,7 +56,7 @@ const Inventory = () => {
       <div className="bg-blue-600 text-white p-4 mb-6 flex items-center justify-between gap-2 shadow rounded-lg">
         <div className="flex items-center gap-2">
           <UserStar className="w-6 h-6" />
-          <h2 className="font-bold text-xl">Pharmacy Dashboard</h2>
+          <h2 className="font-bold text-xl">Pharmacy Dashboard (PH1001)</h2>
         </div>
         <div className="flex items-center gap-4">
           <h1 className="font-medium">Welcome Pharmacy!</h1>
@@ -74,7 +79,7 @@ const Inventory = () => {
         {loading ? (
           <p className="text-gray-600">Loading inventory...</p>
         ) : medicines.length === 0 ? (
-          <p className="text-gray-600">No medicines available.</p>
+          <p className="text-gray-600">No medicines available in PH1001 inventory.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse">
@@ -82,22 +87,29 @@ const Inventory = () => {
                 <tr>
                   <th className="px-4 py-2 border">Medicine Name</th>
                   <th className="px-4 py-2 border">Batch</th>
+                  <th className="px-4 py-2 border">Brand</th>
+                  <th className="px-4 py-2 border">Price</th>
                   <th className="px-4 py-2 border">Status</th>
                   <th className="px-4 py-2 border">Expiry Date</th>
-                  <th className="px-4 py-2 border">Composition</th>
                 </tr>
               </thead>
               <tbody>
                 {medicines.map((med, idx) => (
-                  <tr
-                    key={idx}
-                    className={idx % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                  >
-                    <td className="px-4 py-2 border">{med.medicineName}</td>
+                  <tr key={idx} className={idx % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                    <td className="px-4 py-2 border font-medium">{med.medicineName}</td>
                     <td className="px-4 py-2 border">{med.medicineBatch}</td>
-                    <td className="px-4 py-2 border">{med.medicineStatus}</td>
+                    <td className="px-4 py-2 border">{med.medicineBrand}</td>
+                    <td className="px-4 py-2 border">₹{med.medicinePrice}</td>
+                    <td className="px-4 py-2 border">
+                      <span className={`px-2 py-1 rounded text-xs ${
+                        med.medicineStatus === 'Available' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {med.medicineStatus}
+                      </span>
+                    </td>
                     <td className="px-4 py-2 border">{med.expiryDate}</td>
-                    <td className="px-4 py-2 border">{med.composition}</td>
                   </tr>
                 ))}
               </tbody>
@@ -115,13 +127,13 @@ const Inventory = () => {
         <form onSubmit={handleSell} className="space-y-4 max-w-md">
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Medicine Batch
+              Medicine Batch Number
             </label>
             <div className="flex items-center border rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
               <Pill className="w-4 h-4 text-gray-400 mr-2" />
               <input
                 type="text"
-                placeholder="Enter batch number"
+                placeholder="Enter batch number from inventory"
                 value={medicineBatch}
                 onChange={(e) => setMedicineBatch(e.target.value)}
                 required
@@ -138,13 +150,13 @@ const Inventory = () => {
               <User className="w-4 h-4 text-gray-400 mr-2" />
               <input
                 type="text"
-                placeholder="Enter patient code"
                 value={patientCode}
                 onChange={(e) => setPatientCode(e.target.value)}
                 required
                 className="w-full outline-none"
               />
             </div>
+            <p className="text-xs text-gray-500 mt-1">Default: PA1001 (demo patient)</p>
           </div>
 
           <button
@@ -152,16 +164,14 @@ const Inventory = () => {
             disabled={selling}
             className="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-lg transition"
           >
-            {selling ? "Processing..." : "Sell Medicine"}
+            {selling ? "Processing Sale..." : "Sell Medicine"}
           </button>
         </form>
 
         {sellMsg && (
-          <p
-            className={`mt-4 font-medium ${
-              sellMsg.startsWith("✅") ? "text-green-600" : "text-red-600"
-            }`}
-          >
+          <p className={`mt-4 font-medium ${
+            sellMsg.startsWith("✅") ? "text-green-600" : "text-red-600"
+          }`}>
             {sellMsg}
           </p>
         )}
@@ -169,5 +179,7 @@ const Inventory = () => {
     </div>
   );
 };
+
+
 
 export default Inventory;

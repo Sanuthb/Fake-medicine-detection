@@ -34,9 +34,11 @@ export const pharmacyAPI = {
   viewPharmacies: () => apiRequest("/viewPharmacies"),
   sellToPatient: (data) =>
     apiRequest("/pharmacySellMedicine", { method: "POST", body: JSON.stringify(data) }),
-  // ✅ Updated to fetch medicines for a specific pharmacy
   getMedicinesDetail: (pharmacyCode) =>
     apiRequest(`/queryMedicines/pharmacy/${pharmacyCode}`),
+  // ✅ NEW: Get only detailed info (status, expiry, composition)
+  getMedicinesDetailInfo: (pharmacyCode) =>
+    apiRequest(`/queryMedicinesDetailInfo/${pharmacyCode}`),
 };
 
 // Patient APIs

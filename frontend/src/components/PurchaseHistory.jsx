@@ -7,10 +7,10 @@ const PurchaseHistory = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
-      // ✅ Use a placeholder for the patientCode
-      const patientCode = "YOUR_PATIENT_CODE_HERE";
+      // ✅ Using consistent patient placeholder
+      const patientCode = "PA1001";
       const { data, error } = await patientAPI.getPurchaseHistory(patientCode);
-      if (!error) setHistory(data);
+      if (!error) setHistory(data || []);
       setLoading(false);
     };
     fetchHistory();
@@ -18,18 +18,18 @@ const PurchaseHistory = () => {
 
   return (
     <div className="w-full overflow-x-auto">
-      <h2 className="text-xl font-semibold text-blue-600 mb-4">Purchase History</h2>
+      <h2 className="text-xl font-semibold text-blue-600 mb-4">Purchase History (Patient: PA1001)</h2>
       {loading ? (
         <p className="text-gray-600">Loading purchase history...</p>
       ) : history.length === 0 ? (
-        <p className="text-gray-600">No purchase records found.</p>
+        <p className="text-gray-600">No purchase records found for PA1001.</p>
       ) : (
         <table className="min-w-full table-auto border-collapse bg-white rounded-lg shadow overflow-hidden">
           <thead className="bg-blue-100 text-blue-800">
             <tr>
-              <th className="px-4 py-2 border">Batch</th>
-              <th className="px-4 py-2 border">Pharmacy</th>
-              <th className="px-4 py-2 border">Manufacturer</th>
+              <th className="px-4 py-2 border">Medicine Batch</th>
+              <th className="px-4 py-2 border">Pharmacy Code</th>
+              <th className="px-4 py-2 border">Manufacturer Code</th>
             </tr>
           </thead>
           <tbody>

@@ -3,6 +3,7 @@ import { LogOut, UserStar, Archive, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PurchaseHistory from "../../components/PurchaseHistory";
 import VerifyMedicine from "../../components/VerifyMedicine";
+import MeddicineDetailInfo from "../../components/MedicineDetailInfo";
 
 const PatientDashboard = () => {
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ const PatientDashboard = () => {
       <div className="p-4 bg-white rounded-lg shadow">
         {activeTab === "history" ? <PurchaseHistory /> : <VerifyMedicine />}
       </div>
+      <MeddicineDetailInfo />
     </div>
   );
 };

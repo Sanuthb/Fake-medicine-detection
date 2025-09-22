@@ -226,6 +226,26 @@ app.get("/queryMedicines/pharmacy/:pharmacyCode", async (req, res) => {
   }
 });
 
+app.get("/queryMedicinesDetailInfo/:pharmacyCode", async (req, res) => {
+  try {
+    const { pharmacyCode } = req.params;
+    const data = await medicineContract.methods
+      .queryMedicinesDetailInfo(toBytes32(pharmacyCode))
+      .call();
+    
+    // The smart contract returns: mstatus, mexpiry, mcomposition arrays
+    const result = data[0].map((_, i) => ({
+      medicineStatus: fromBytes32(data[0][i]),
+      expiryDate: fromBytes32(data[1][i]),
+      composition: fromBytes32(data[2][i]),
+    }));
+
+    res.json(result);
+  } catch (err) {
+    console.error("Error in queryMedicinesDetailInfo:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ===== START SERVER ===== //
 app.listen(5000, () => console.log("🚀 API running on http://localhost:5000"));
