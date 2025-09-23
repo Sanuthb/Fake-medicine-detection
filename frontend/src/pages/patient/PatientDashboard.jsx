@@ -58,7 +58,7 @@ const PatientDashboard = () => {
       <div className="p-4 bg-white rounded-lg shadow">
         {activeTab === "history" ? <PurchaseHistory /> : <VerifyMedicine />}
       </div>
-      <MeddicineDetailInfo />
+      {/* <MeddicineDetailInfo /> */}
     </div>
   );
 };
