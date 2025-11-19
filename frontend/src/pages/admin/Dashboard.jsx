@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { adminAPI } from "../../api/api";
-import { UserStar, LogOut, Pill, Hospital, PlusCircle } from "lucide-react";
+import { UserStar, LogOut, Pill, Hospital, PlusCircle, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ViewMedicines from "../../components/ViewMedicines";
 import ViewPharmacies from "../../components/ViewPharmacies";
 import AddPharmacy from "../../components/AddPharmacy";
+import ViewComplaints from "../../components/ViewComplaints";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ totalMedicines: 0, totalPharmacies: 0 });
@@ -86,6 +87,14 @@ const Dashboard = () => {
           >
             <PlusCircle /> Add Pharmacy
           </button>
+          <button
+            onClick={() => setActiveTab("viewcomplaints")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+              activeTab === "viewcomplaints" ? "bg-red-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            <AlertTriangle /> View Complaints
+          </button>
         </div>
 
         {/* Render Component */}
@@ -93,6 +102,7 @@ const Dashboard = () => {
           {activeTab === "viewpharmacy" && <ViewPharmacies />}
           {activeTab === "viewmedicine" && <ViewMedicines />}
           {activeTab === "addpharmacy" && <AddPharmacy />}
+          {activeTab === "viewcomplaints" && <ViewComplaints />}
         </div>
       </div>
     </div>

@@ -6,15 +6,20 @@ import AddMedicine from './components/AddMedicine'
 import ManufactureDashboard from './pages/manufacturer/ManufactureDashboard'
 import Inventory from './pages/pharmacy/Inventory'
 import PatientDashboard from './pages/patient/PatientDashboard'
+import SubmitComplaint from './components/SubmitComplaint' 
+import ViewComplaints from './components/ViewComplaints'
 
 const App = () => {
   return (
     <Routes>
       <Route path='/admin/dashboard' element={<Dashboard/>} />
+      <Route path='/admin/view-complaints' element={<ViewComplaints/>} />
       <Route path='/manufacture/add-medicine' element={<AddMedicine/>} />
       <Route path='/manufacture/manufacture-dashboard' element={<ManufactureDashboard/>} />
       <Route path='/pharmacy/inventory' element={<Inventory/>} />
       <Route path='/patient/patient-dashboard' element={<PatientDashboard/>} />
+      <Route path='/patient/submit-complaint' element={<SubmitComplaint/>} />
+      {/* <Route path='/verify-medicine' element={<VerifyMedicine />} /> */}
       <Route path='/' element={<LoginForm/>} />
     </Routes>
   )

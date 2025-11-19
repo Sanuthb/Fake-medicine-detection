@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LogOut, UserStar, Archive, CheckCircle } from "lucide-react";
+import { LogOut, UserStar, Archive, CheckCircle, AlertTriangle } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
 import PurchaseHistory from "../../components/PurchaseHistory";
 import VerifyMedicine from "../../components/VerifyMedicine";
@@ -51,6 +51,12 @@ const PatientDashboard = () => {
           }`}
         >
           <CheckCircle className="w-5 h-5" /> Verify Medicine
+        </button>
+        <button
+          onClick={() => navigate("/patient/submit-complaint")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition bg-red-400 text-white shadow hover:bg-red-500`}
+        >
+          <AlertTriangle className="w-5 h-5" /> Submit Complaint
         </button>
       </div>
 

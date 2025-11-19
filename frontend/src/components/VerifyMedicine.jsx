@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { patientAPI } from "../api/api";
-import { CheckCircle, Pill } from "lucide-react";
+import { CheckCircle, Pill, Building2, Factory } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const VerifyMedicine = () => {
   const [medicineBatch, setMedicineBatch] = useState("");
@@ -19,10 +20,10 @@ const VerifyMedicine = () => {
         medicineBatch, 
         patientCode 
       });
-      if (!error) setResult(data);
-      else setResult({ valid: false });
+      if (!error && data.isVerified!==undefined) setResult(data);
+      else setResult({ isVerified: false });
     } catch (err) {
-      setResult({ valid: false });
+      setResult({ isVerified: false });
     } finally {
       setLoading(false);
     }
@@ -57,18 +58,54 @@ const VerifyMedicine = () => {
       </form>
       
       {result && (
-        <div className={`mt-4 p-4 rounded-lg ${
-          result.valid ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+        <div className={`mt-4 p-4 rounded-lg border ${
+          result.isVerified ? "bg-green-50 border-green-300" : "bg-red-50 border-red-300"
         }`}>
-          <p className="font-semibold">
-            {result.valid ? "✅ VERIFIED" : "❌ NOT VERIFIED"}
+          <p className="font-semibold text-lg flex items-center gap-2">
+            {/* Note: changed 'valid' to 'isVerified' */}
+            {result.isVerified ? "✅ VERIFIED - AUTHENTIC" : "❌ NOT VERIFIED - FAKE/UNCERTAIN"}
           </p>
           <p className="text-sm mt-1">
-            {result.valid 
-              ? "This medicine is authentic and was purchased by PA1001" 
-              : "This medicine batch was not sold to patient PA1001 or doesn't exist"
+            {result.isVerified 
+              ? `This medicine batch was successfully tracked and sold to patient PA1001.` 
+              : "This medicine batch was not sold to patient PA1001 or data is missing. Exercise caution."
             }
           </p>
+          
+          {/* **(NEW DETAILS DISPLAY)** */}
+          {result.medicineName && (
+            <div className="mt-4 border-t pt-3 space-y-2">
+              <h3 className="font-bold text-base text-gray-700">Medicine Details:</h3>
+              <p><span className="font-medium">Name:</span> {result.medicineName}</p>
+              <p><span className="font-medium">Brand:</span> {result.medicineBrand}</p>
+              <p><span className="font-medium">Price:</span> ₹{result.medicinePrice}</p>
+              <p><span className="font-medium">Status:</span> <span className={`font-semibold ${result.medicineStatus === 'Sold' ? 'text-red-500' : 'text-green-500'}`}>{result.medicineStatus}</span></p>
+              
+              {/* **(NEW FIELDS)** */}
+              <p><span className="font-medium">Manufacture Date:</span> <span className="font-mono">{result.manufactureDate}</span></p>
+              <p><span className="font-medium">Expiry Date:</span> <span className="font-mono text-red-600 font-bold">{result.expiryDate}</span></p>
+              <p><span className="font-medium">Composition:</span> {result.composition}</p>
+
+              <h3 className="font-bold text-base text-gray-700 mt-3 flex items-center gap-1">
+                <Factory className="w-4 h-4"/> Manufacturer Code:
+              </h3>
+              <p className='text-sm font-mono p-1 bg-gray-200 rounded'>{result.manufacturerCode}</p>
+              
+              <h3 className="font-bold text-base text-gray-700 mt-3 flex items-center gap-1">
+                <Building2 className="w-4 h-4"/> Pharmacy Code (Sold From):
+              </h3>
+              <p className='text-sm font-mono p-1 bg-gray-200 rounded'>{result.pharmacyCode}</p>
+              
+              {/* **(NEW COMPLAINT LINK)** */}
+              <Link 
+                to="/patient/submit-complaint" 
+                state={{ batch: medicineBatch }} // Optional: Pass batch number to complaint form
+                className="mt-3 w-full block text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg text-sm font-semibold transition"
+              >
+                File a Complaint
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>

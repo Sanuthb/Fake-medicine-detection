@@ -5,6 +5,30 @@ contract Medicine {
     uint256 pharmacyCount;
     uint256 medicineCount;
 
+    // --- ADMIN AND COMPLAINT SYSTEM ---
+    address private admin;
+    uint256 complaintCount;
+
+    struct Complaint {
+        uint256 complaintId;
+        bytes32 medicineBatch;
+        bytes32 patientCode;
+        bytes32 reason; // Complaint reason
+    }
+    mapping(uint256 => Complaint) public complaints;
+
+    modifier onlyAdmin() {
+        require(admin != address(0), "Admin not initialized.");
+        require(msg.sender == admin, "Only admin can call this function.");
+        _;
+    }
+
+    function initializeAdmin(address _admin) public {
+        require(admin == address(0), "Admin is already set.");
+        admin = _admin;
+    }
+    // ------------------------------------
+
     struct pharmacy{
         uint256 pharmacyId;
         bytes32 pharmacyName;
@@ -16,6 +40,7 @@ contract Medicine {
     }
     mapping(uint=>pharmacy) public pharmacies;
 
+    // --- UPDATED medicineItem STRUCT ---
     struct medicineItem{
         uint256 medicineId;
         bytes32 medicineBatch;
@@ -23,9 +48,11 @@ contract Medicine {
         bytes32 medicineBrand;
         uint256 medicinePrice;
         bytes32 medicineStatus;
+        bytes32 manufactureDate; 
         bytes32 expiryDate;
         bytes32 composition;
     }
+    // ------------------------------------
 
     mapping(uint256=>medicineItem) public medicineItems;
     mapping(bytes32=>uint256) public medicineMap;
@@ -36,8 +63,7 @@ contract Medicine {
     mapping(bytes32=>bytes32[]) public medicinesWithPatient;
     mapping(bytes32=>bytes32[]) public pharmaciesWithManufacturer;
 
-
-    //PHARMACY SECTION
+//PHARMACY SECTION
 
     function addPharmacy(bytes32 _manufacturerId, bytes32 _pharmacyName, bytes32 _pharmacyLicense, bytes32 _pharmacyCode,
     uint256 _pharmacyPhone, bytes32 _pharmacistName, bytes32 _pharmacyAddress) public{
@@ -48,49 +74,53 @@ contract Medicine {
         pharmaciesWithManufacturer[_manufacturerId].push(_pharmacyCode);
     }
 
-
-    function viewPharmacies () public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory, uint256[] memory, bytes32[] memory, bytes32[] memory) {
+    // Fixed 'Stack too deep' by splitting Global Pharmacy View
+    function viewPharmaciesBasicInfo() public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory) {
         uint256[] memory ids = new uint256[](pharmacyCount);
         bytes32[] memory pnames = new bytes32[](pharmacyCount);
         bytes32[] memory plicense = new bytes32[](pharmacyCount);
         bytes32[] memory pcodes = new bytes32[](pharmacyCount);
-        uint256[] memory pphones = new uint256[](pharmacyCount);
-        bytes32[] memory pharmacists = new bytes32[](pharmacyCount);
-        bytes32[] memory paddress = new bytes32[](pharmacyCount);
-        
+
         for(uint i=0; i<pharmacyCount; i++){
             ids[i] = pharmacies[i].pharmacyId;
             pnames[i] = pharmacies[i].pharmacyName;
             plicense[i] = pharmacies[i].pharmacyLicense;
             pcodes[i] = pharmacies[i].pharmacyCode;
+        }
+        return(ids, pnames, plicense, pcodes);
+    }
+
+    function viewPharmaciesContactInfo() public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory) {
+        uint256[] memory pphones = new uint256[](pharmacyCount);
+        bytes32[] memory pharmacists = new bytes32[](pharmacyCount);
+        bytes32[] memory paddress = new bytes32[](pharmacyCount);
+
+        for(uint i=0; i<pharmacyCount; i++){
             pphones[i] = pharmacies[i].pharmacyPhone;
             pharmacists[i] = pharmacies[i].pharmacistName;
             paddress[i] = pharmacies[i].pharmacyAddress;
         }
-        return(ids, pnames, plicense, pcodes, pphones, pharmacists, paddress);
+        return(pphones, pharmacists, paddress);
     }
 
-    //MEDICINE SECTION
+//MEDICINE SECTION
 
     function addMedicine(bytes32 _manufactuerID, bytes32 _medicineName, bytes32 _medicineBatch, bytes32 _medicineBrand,
-    uint256 _medicinePrice, bytes32 _expiryDate, bytes32 _composition) public{
+    uint256 _medicinePrice, bytes32 _manufactureDate, bytes32 _expiryDate, bytes32 _composition) public{
         medicineItems[medicineCount] = medicineItem(medicineCount, _medicineBatch, _medicineName, _medicineBrand,
-        _medicinePrice, "Available", _expiryDate, _composition);
+        _medicinePrice, "Available", _manufactureDate, _expiryDate, _composition);
         medicineMap[_medicineBatch] = medicineCount;
         medicineCount++;
         medicinesManufactured[_medicineBatch] = _manufactuerID;
     }
 
-
-    function viewMedicineItems () public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory, uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory) {
+    // --- SPLIT viewMedicineItems (Basic Info) ---
+    function viewMedicineItemsBasic() public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory, uint256[] memory) {
         uint256[] memory mids = new uint256[](medicineCount);
         bytes32[] memory mBatches = new bytes32[](medicineCount);
         bytes32[] memory mnames = new bytes32[](medicineCount);
         bytes32[] memory mbrands = new bytes32[](medicineCount);
         uint256[] memory mprices = new uint256[](medicineCount);
-        bytes32[] memory mstatus = new bytes32[](medicineCount);
-        bytes32[] memory mexpiry = new bytes32[](medicineCount);
-        bytes32[] memory mcomposition = new bytes32[](medicineCount);
         
         for(uint i=0; i<medicineCount; i++){
             mids[i] = medicineItems[i].medicineId;
@@ -98,14 +128,27 @@ contract Medicine {
             mnames[i] = medicineItems[i].medicineName;
             mbrands[i] = medicineItems[i].medicineBrand;
             mprices[i] = medicineItems[i].medicinePrice;
+        }
+        return(mids, mBatches, mnames, mbrands, mprices);
+    }
+    
+    // --- SPLIT viewMedicineItems (Details) ---
+    function viewMedicineItemsDetails() public view returns(bytes32[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory) {
+        bytes32[] memory mstatus = new bytes32[](medicineCount);
+        bytes32[] memory mmanufacture = new bytes32[](medicineCount);
+        bytes32[] memory mexpiry = new bytes32[](medicineCount);
+        bytes32[] memory mcomposition = new bytes32[](medicineCount);
+
+        for(uint i=0; i<medicineCount; i++){
             mstatus[i] = medicineItems[i].medicineStatus;
+            mmanufacture[i] = medicineItems[i].manufactureDate;
             mexpiry[i] = medicineItems[i].expiryDate;
             mcomposition[i] = medicineItems[i].composition;
         }
-        return(mids, mBatches, mnames, mbrands, mprices, mstatus, mexpiry, mcomposition);
+        return(mstatus, mmanufacture, mexpiry, mcomposition);
     }
 
-    //SELL Medicine
+//SELL Medicine
 
     function manufacturerSellMedicine(bytes32 _medicineBatch, bytes32 _pharmacyCode) public{
         medicinesWithPharmacy[_pharmacyCode].push(_medicineBatch);
@@ -133,7 +176,7 @@ contract Medicine {
         }
     }
 
-    // Split the query function into two parts to avoid stack too deep error
+
     function queryMedicinesBasicInfo(bytes32 _pharmacyCode) public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory, uint256[] memory){
         bytes32[] memory medicineBatches = medicinesWithPharmacy[_pharmacyCode];
         uint256 k=0;
@@ -159,11 +202,12 @@ contract Medicine {
         return(mids, mBatches, mnames, mbrands, mprices);
     }
 
-    function queryMedicinesDetailInfo(bytes32 _pharmacyCode) public view returns(bytes32[] memory, bytes32[] memory, bytes32[] memory){
+    function queryMedicinesDetailInfo(bytes32 _pharmacyCode) public view returns(bytes32[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory){
         bytes32[] memory medicineBatches = medicinesWithPharmacy[_pharmacyCode];
         uint256 k=0;
 
         bytes32[] memory mstatus = new bytes32[](medicineCount);
+        bytes32[] memory mmanufacture = new bytes32[](medicineCount);
         bytes32[] memory mexpiry = new bytes32[](medicineCount);
         bytes32[] memory mcomposition = new bytes32[](medicineCount);
 
@@ -171,26 +215,24 @@ contract Medicine {
             for(uint j=0; j<medicineBatches.length; j++){
                 if(medicineItems[i].medicineBatch==medicineBatches[j]){
                     mstatus[k] = medicineItems[i].medicineStatus;
+                    mmanufacture[k] = medicineItems[i].manufactureDate;
                     mexpiry[k] = medicineItems[i].expiryDate;
                     mcomposition[k] = medicineItems[i].composition;
                     k++;
                 }
             }
         }
-        return(mstatus, mexpiry, mcomposition);
+        return(mstatus, mmanufacture, mexpiry, mcomposition);
     }
 
-    function queryPharmaciesList (bytes32 _manufacturerCode) public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory, uint256[] memory, bytes32[] memory, bytes32[] memory) {
+    function queryPharmaciesBasicInfoList (bytes32 _manufacturerCode) public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory) {
         bytes32[] memory pharmacyCodes = pharmaciesWithManufacturer[_manufacturerCode];
         uint256 k=0;
         uint256[] memory ids = new uint256[](pharmacyCount);
         bytes32[] memory pnames = new bytes32[](pharmacyCount);
         bytes32[] memory plicense = new bytes32[](pharmacyCount);
         bytes32[] memory pcodes = new bytes32[](pharmacyCount);
-        uint256[] memory pphones = new uint256[](pharmacyCount);
-        bytes32[] memory pharmacists = new bytes32[](pharmacyCount);
-        bytes32[] memory paddress = new bytes32[](pharmacyCount);
-        
+
         for(uint i=0; i<pharmacyCount; i++){
             for(uint j=0; j<pharmacyCodes.length; j++){
                 if(pharmacies[i].pharmacyCode==pharmacyCodes[j]){
@@ -198,17 +240,37 @@ contract Medicine {
                     pnames[k] = pharmacies[i].pharmacyName;
                     plicense[k] = pharmacies[i].pharmacyLicense;
                     pcodes[k] = pharmacies[i].pharmacyCode;
+                    k++;
+                    break;
+                }
+            }
+        }
+
+        return(ids, pnames, plicense, pcodes);
+    }
+    
+    function queryPharmaciesContactInfoList (bytes32 _manufacturerCode) public view returns(uint256[] memory, bytes32[] memory, bytes32[] memory) {
+        bytes32[] memory pharmacyCodes = pharmaciesWithManufacturer[_manufacturerCode];
+        uint256 k=0;
+        uint256[] memory pphones = new uint256[](pharmacyCount);
+        bytes32[] memory pharmacists = new bytes32[](pharmacyCount);
+        bytes32[] memory paddress = new bytes32[](pharmacyCount);
+
+        for(uint i=0; i<pharmacyCount; i++){
+            for(uint j=0; j<pharmacyCodes.length; j++){
+                if(pharmacies[i].pharmacyCode==pharmacyCodes[j]){
                     pphones[k] = pharmacies[i].pharmacyPhone;
                     pharmacists[k] = pharmacies[i].pharmacistName;
                     paddress[k] = pharmacies[i].pharmacyAddress;
                     k++;
                     break;
-               }
+                }
             }
         }
 
-        return(ids, pnames, plicense, pcodes, pphones, pharmacists, paddress);
+        return(pphones, pharmacists, paddress);
     }
+
 
     function getPurchaseHistory(bytes32 _patientCode) public view returns (bytes32[] memory, bytes32[] memory, bytes32[] memory){
         bytes32[] memory medicineBatches = medicinesWithPatient[_patientCode];
@@ -221,14 +283,63 @@ contract Medicine {
         return (medicineBatches, pharmacyCodes, manufacturerCodes);
     }
 
-    //Verify
+// --- NEW SPLIT VERIFICATION FUNCTION (1 of 2): Status & Codes ---
+    function verifyMedicineStatus(bytes32 _medicineBatch, bytes32 _patientCode) public view returns(
+        bool,        // 0: Verification Status
+        bytes32,     // 1: Manufacturer Code
+        bytes32      // 2: Pharmacy Code (where it was sold from)
+    ) {
+        bool isVerified = (medicinesSold[_medicineBatch] == _patientCode);
+        bytes32 manufacturerCode = medicinesManufactured[_medicineBatch];
+        bytes32 pharmacyCode = medicinesForSale[_medicineBatch];
+        
+        return (isVerified, manufacturerCode, pharmacyCode);
+    }
 
-    function verifyMedicine(bytes32 _medicineBatch, bytes32 _patientCode) public view returns(bool){
-        if(medicinesSold[_medicineBatch] == _patientCode){
-            return true;
+// --- NEW SPLIT VERIFICATION FUNCTION (2 of 2): Details ---
+    function getMedicineDetailsByBatch(bytes32 _medicineBatch) public view returns(
+        bytes32,     // 0: Medicine Name
+        bytes32,     // 1: Medicine Brand
+        uint256,     // 2: Medicine Price
+        bytes32,     // 3: Medicine Status (Available/Sold)
+        bytes32,     // 4: Manufacture Date
+        bytes32,     // 5: Expiry Date
+        bytes32      // 6: Composition
+    ) {
+        uint256 id = medicineMap[_medicineBatch];
+        medicineItem memory item = medicineItems[id];
+
+        return (
+            item.medicineName,
+            item.medicineBrand,
+            item.medicinePrice,
+            item.medicineStatus,
+            item.manufactureDate,
+            item.expiryDate,
+            item.composition
+        );
+    }
+// ------------------------------------
+
+// --- COMPLAINT SECTION ---
+
+    function submitComplaint(bytes32 _medicineBatch, bytes32 _patientCode, bytes32 _reason) public {
+        complaints[complaintCount] = Complaint(complaintCount, _medicineBatch, _patientCode, _reason);
+        complaintCount++;
+    }
+
+    function viewComplaints() public view onlyAdmin returns(uint256[] memory, bytes32[] memory, bytes32[] memory, bytes32[] memory) {
+        uint256[] memory ids = new uint256[](complaintCount);
+        bytes32[] memory batches = new bytes32[](complaintCount);
+        bytes32[] memory patients = new bytes32[](complaintCount);
+        bytes32[] memory reasons = new bytes32[](complaintCount);
+
+        for(uint i=0; i<complaintCount; i++){
+            ids[i] = complaints[i].complaintId;
+            batches[i] = complaints[i].medicineBatch;
+            patients[i] = complaints[i].patientCode;
+            reasons[i] = complaints[i].reason;
         }
-        else{
-            return false;
-        }
+        return (ids, batches, patients, reasons);
     }
 }

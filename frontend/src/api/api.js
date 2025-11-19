@@ -47,14 +47,20 @@ export const patientAPI = {
     apiRequest("/verifyMedicine", { method: "POST", body: JSON.stringify(data) }),
   getPurchaseHistory: (patientCode) =>
     apiRequest(`/getPurchaseHistory/${patientCode}`),
+  
+  // **(NEW)**: Submit a complaint (Patient)
+  submitComplaint: (data) =>
+    apiRequest("/submitComplaint", { method: "POST", body: JSON.stringify(data) }),
 };
-
 // Admin APIs
 export const adminAPI = {
   viewMedicines: () => apiRequest("/viewMedicineItems"),
   viewPharmacies: () => apiRequest("/viewPharmacies"),
   addPharmacy: (data) =>
     apiRequest("/addPharmacy", { method: "POST", body: JSON.stringify(data) }),
+
+  // **(NEW)**: View all complaints (Admin-only)
+  viewComplaints: () => apiRequest("/viewComplaints"), 
 };
 
 // Auth (mock)

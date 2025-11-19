@@ -11,6 +11,7 @@ const AddMedicine = () => {
     medicinePrice: "",
     expiryDate: "",
     composition: "",
+    manufactureDate: "",
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
@@ -32,6 +33,7 @@ const AddMedicine = () => {
       medicinePrice: Number(form.medicinePrice),
       expiryDate: form.expiryDate,
       composition: form.composition,
+      manufactureDate: form.manufactureDate,
     };
 
     try {
@@ -39,7 +41,9 @@ const AddMedicine = () => {
       if (error) {
         setMsg(`❌ Error: ${error}`);
       } else {
-        setMsg(`✅ Medicine "${form.medicineName}" added successfully! Tx: ${data.txHash}`);
+        setMsg(
+          `✅ Medicine "${form.medicineName}" added successfully! Tx: ${data.txHash}`
+        );
         // Reset form except manufacturer ID
         setForm({
           manufacturerID: "MC1001",
@@ -49,6 +53,7 @@ const AddMedicine = () => {
           medicinePrice: "",
           expiryDate: "",
           composition: "",
+          manufactureDate: "",
         });
       }
     } catch (err) {
@@ -63,7 +68,7 @@ const AddMedicine = () => {
       <h2 className="text-2xl font-semibold text-blue-600 mb-4 flex gap-2">
         <Tablets /> Add Medicine (Manufacturer: MC1001)
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none bg-gray-100"
@@ -71,7 +76,7 @@ const AddMedicine = () => {
           value={form.manufacturerID}
           readOnly
         />
-        
+
         <input
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
           placeholder="Medicine Name (e.g., Paracetamol)"
@@ -79,7 +84,7 @@ const AddMedicine = () => {
           onChange={(e) => handleChange("medicineName", e.target.value)}
           required
         />
-        
+
         <input
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
           placeholder="Batch Number (e.g., BTH001)"
@@ -87,7 +92,7 @@ const AddMedicine = () => {
           onChange={(e) => handleChange("medicineBatch", e.target.value)}
           required
         />
-        
+
         <input
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
           placeholder="Brand (e.g., Cipla)"
@@ -95,7 +100,7 @@ const AddMedicine = () => {
           onChange={(e) => handleChange("medicineBrand", e.target.value)}
           required
         />
-        
+
         <input
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
           placeholder="Price (₹)"
@@ -104,7 +109,16 @@ const AddMedicine = () => {
           onChange={(e) => handleChange("medicinePrice", e.target.value)}
           required
         />
-        
+        <label>Manufacture Date</label>
+        <input
+          className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
+          placeholder="Manufacture Date"
+          type="date"
+          value={form.manufactureDate}
+          onChange={(e) => handleChange("manufactureDate", e.target.value)}
+          required
+        />
+        <label>Expiry Date</label>
         <input
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
           placeholder="Expiry Date"
@@ -113,7 +127,7 @@ const AddMedicine = () => {
           onChange={(e) => handleChange("expiryDate", e.target.value)}
           required
         />
-        
+
         <textarea
           className="border p-2 rounded-md focus:ring-2 focus:ring-blue-400 outline-none"
           placeholder="Composition (e.g., Acetaminophen 500mg)"
@@ -121,7 +135,7 @@ const AddMedicine = () => {
           onChange={(e) => handleChange("composition", e.target.value)}
           required
         />
-        
+
         <button
           type="submit"
           disabled={loading}
@@ -132,13 +146,15 @@ const AddMedicine = () => {
           {loading ? "Adding Medicine..." : "Add Medicine"}
         </button>
       </form>
-      
+
       {msg && (
-        <p className={`mt-4 p-2 rounded ${
-          msg.startsWith("✅")
-            ? "bg-green-100 text-green-700"
-            : "bg-red-100 text-red-700"
-        }`}>
+        <p
+          className={`mt-4 p-2 rounded ${
+            msg.startsWith("✅")
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
           {msg}
         </p>
       )}
