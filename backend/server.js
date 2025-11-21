@@ -39,7 +39,28 @@ const serializeBigInt = obj => {
   return obj;
 };
 
-// ===== ROUTES (All routes updated to match split contract functions) ===== //
+// ===== ROUTES (ALL FUNCTIONS SPLIT TO AVOID STACK TOO DEEP ERRORS) ===== //
+
+// ⭐ NEW TEMPORARY ROUTE: Initialize Admin (Must be called ONCE)
+app.post("/initializeAdmin", async (req, res) => {
+    try {
+        const { adminAddress } = req.body;
+        if (!adminAddress) {
+            return res.status(400).json({ error: "Missing adminAddress in request body." });
+        }
+        
+        // Use defaultAccount to send the transaction
+        const receipt = await medicineContract.methods
+            .initializeAdmin(adminAddress)
+            .send({ from: defaultAccount, gas: 3000000 });
+            
+        res.json({ message: "Admin initialized successfully!", admin: adminAddress, txHash: receipt.transactionHash });
+    } catch (err) {
+        console.error("Error initializing admin:", err.message);
+        res.status(500).json({ error: "Failed to initialize admin. Ensure it's only called once per deployment." });
+    }
+});
+
 
 // 1️⃣ Add Pharmacy
 app.post("/addPharmacy", async (req, res) => {
@@ -60,10 +81,9 @@ app.post("/addPharmacy", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 2️⃣ Add Medicine (Updated to pass all 8 parameters)
+// 2️⃣ Add Medicine (UPDATED: 8 parameters)
 app.post("/addMedicine", async (req, res) => {
   try {
-    // Ensure all 8 parameters are destructured from the request body
     const { manufacturerID, medicineName, medicineBatch, medicineBrand, medicinePrice,manufactureDate, expiryDate, composition } = req.body;
     const receipt = await medicineContract.methods
       .addMedicine(
@@ -72,7 +92,7 @@ app.post("/addMedicine", async (req, res) => {
         toBytes32(medicineBatch),
         toBytes32(medicineBrand),
         medicinePrice,
-        toBytes32(manufactureDate), // <-- New field
+        toBytes32(manufactureDate), // New field
         toBytes32(expiryDate),
         toBytes32(composition)
       )
@@ -84,6 +104,7 @@ app.post("/addMedicine", async (req, res) => {
     }
 });
 
+// Purchase History
 app.get("/getPurchaseHistory/:patientCode", async (req, res) => {
   try {
     const { patientCode } = req.params;
@@ -101,12 +122,12 @@ app.get("/getPurchaseHistory/:patientCode", async (req, res) => {
   }
 });
 
-// 3️⃣ View Medicines (UPDATED to call split contract functions and combine)
+// 3️⃣ View Medicines (UPDATED: Calls split functions and combines results)
 app.get("/viewMedicineItems", async (req, res) => {
   try {
-    // 1. Fetch Basic Info (ID, Batch, Name, Brand, Price)
+    // 1. Fetch Basic Info
     const basicData = await medicineContract.methods.viewMedicineItemsBasic().call();
-    // 2. Fetch Detailed Info (Status, Manufacture Date, Expiry Date, Composition)
+    // 2. Fetch Detailed Info
     const detailData = await medicineContract.methods.viewMedicineItemsDetails().call();
 
     const result = basicData[0].map((_, i) => serializeBigInt({
@@ -117,7 +138,7 @@ app.get("/viewMedicineItems", async (req, res) => {
       medicinePrice: basicData[4][i],
       // Map detailed data from the second call
       medicineStatus: fromBytes32(detailData[0][i]),
-      manufactureDate: fromBytes32(detailData[1][i]), // <-- New field mapping
+      manufactureDate: fromBytes32(detailData[1][i]),
       expiryDate: fromBytes32(detailData[2][i]),
       composition: fromBytes32(detailData[3][i])
     }));
@@ -150,7 +171,7 @@ app.post("/pharmacySellMedicine", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 6️⃣ Verify Medicine (UPDATED to call split contract functions and combine)
+// 6️⃣ Verify Medicine (UPDATED: Calls split functions and combines results)
 app.post("/verifyMedicine", async (req, res) => {
   try {
     const { medicineBatch, patientCode } = req.body;
@@ -159,13 +180,13 @@ app.post("/verifyMedicine", async (req, res) => {
     }
     const medicineBatchBytes = toBytes32(medicineBatch);
     const patientCodeBytes = toBytes32(patientCode);
-    
-    // 1. Get Status and Codes
+
+    // 1. Get Status and Codes (verifyMedicineStatus)
     const statusData = await medicineContract.methods
       .verifyMedicineStatus(medicineBatchBytes, patientCodeBytes)
       .call();
     
-    // 2. Get Details
+    // 2. Get Details (getMedicineDetailsByBatch)
     const detailsData = await medicineContract.methods
         .getMedicineDetailsByBatch(medicineBatchBytes)
         .call();
@@ -179,7 +200,7 @@ app.post("/verifyMedicine", async (req, res) => {
         // Medicine Details (from detailsData)
         medicineName: fromBytes32(detailsData[0]),
         medicineBrand: fromBytes32(detailsData[1]),
-        medicinePrice: serializeBigInt(detailsData[2]), // Price is uint256
+        medicinePrice: serializeBigInt(detailsData[2]), 
         medicineStatus: fromBytes32(detailsData[3]),
         manufactureDate: fromBytes32(detailsData[4]),
         expiryDate: fromBytes32(detailsData[5]),
@@ -193,12 +214,12 @@ app.post("/verifyMedicine", async (req, res) => {
   }
 });
 
-// 7️⃣ View Pharmacies (UPDATED to call split contract functions and combine)
+// 7️⃣ View Pharmacies (UPDATED: Calls split functions and combines results)
 app.get("/viewPharmacies", async (req, res) => {
   try {
-    // 1. Fetch Basic Info (ID, Name, License, Code)
+    // 1. Fetch Basic Info
     const basicData = await medicineContract.methods.viewPharmaciesBasicInfo().call();
-    // 2. Fetch Contact Info (Phone, Pharmacist, Address)
+    // 2. Fetch Contact Info
     const contactData = await medicineContract.methods.viewPharmaciesContactInfo().call();
 
     const result = basicData[0].map((_, i) => ({
@@ -207,7 +228,6 @@ app.get("/viewPharmacies", async (req, res) => {
       pharmacyLicense: fromBytes32(basicData[2][i]),
       pharmacyCode: fromBytes32(basicData[3][i]),
       
-      // Map contact data from the second call
       pharmacyPhone: contactData[0][i].toString(),
       pharmacistName: fromBytes32(contactData[1][i]),
       pharmacyAddress: fromBytes32(contactData[2][i]),
@@ -218,7 +238,7 @@ app.get("/viewPharmacies", async (req, res) => {
   }
 });
 
-// ✅ NEW ROUTE: Filters pharmacies by manufacturerCode (UPDATED to call split contract functions)
+// ✅ NEW ROUTE: Filters pharmacies by manufacturerCode
 app.get("/queryPharmaciesList/:manufacturerCode", async (req, res) => {
   try {
     const { manufacturerCode } = req.params;
@@ -237,7 +257,6 @@ app.get("/queryPharmaciesList/:manufacturerCode", async (req, res) => {
       pharmacyLicense: fromBytes32(basicData[2][i]),
       pharmacyCode: fromBytes32(basicData[3][i]),
       
-      // Map contact data from the second call
       pharmacyPhone: contactData[0][i].toString(),
       pharmacistName: fromBytes32(contactData[1][i]),
       pharmacyAddress: fromBytes32(contactData[2][i]),
@@ -248,7 +267,7 @@ app.get("/queryPharmaciesList/:manufacturerCode", async (req, res) => {
   }
 });
 
-// ✅ NEW ROUTE: View Medicines by Pharmacy (UPDATED mapping for Manufacture Date)
+// ✅ NEW ROUTE: View Medicines by Pharmacy
 app.get("/queryMedicines/pharmacy/:pharmacyCode", async (req, res) => {
   try {
     const { pharmacyCode } = req.params;
@@ -259,16 +278,15 @@ app.get("/queryMedicines/pharmacy/:pharmacyCode", async (req, res) => {
       .queryMedicinesDetailInfo(toBytes32(pharmacyCode))
       .call();
     
-    // detailData now returns 4 arrays: mstatus, mmanufacture, mexpiry, mcomposition
     const result = basicData[0].map((_, i) => ({
       medicineId: basicData[0][i].toString(),
       medicineBatch: fromBytes32(basicData[1][i]),
       medicineName: fromBytes32(basicData[2][i]),
       medicineBrand: fromBytes32(basicData[3][i]),
       medicinePrice: basicData[4][i].toString(),
-      // Mapping the 4 arrays from detailData
+      
       medicineStatus: fromBytes32(detailData[0][i]),
-      manufactureDate: fromBytes32(detailData[1][i]), // <-- Corrected index for Manufacture Date
+      manufactureDate: fromBytes32(detailData[1][i]),
       expiryDate: fromBytes32(detailData[2][i]),
       composition: fromBytes32(detailData[3][i]),
     }));
@@ -278,10 +296,6 @@ app.get("/queryMedicines/pharmacy/:pharmacyCode", async (req, res) => {
     res.status(500).json({ error: "Failed to query pharmacy medicines: " + err.message });
   }
 });
-
-// ❌ Route removed as it is redundant and replaced by the combined routes
-// app.get("/queryMedicinesDetailInfo/:pharmacyCode", ...)
-
 
 // ===== NEW COMPLAINT ROUTES ===== //
 
@@ -301,9 +315,8 @@ app.post("/submitComplaint", async (req, res) => {
 // View Complaints (Admin)
 app.get("/viewComplaints", async (req, res) => {
     try {
-        // NOTE: The contract requires this function to be called by the Admin address.
-        // Assuming defaultAccount is your admin account for this example.
-        const data = await medicineContract.methods.viewComplaints().call({ from: defaultAccount });
+        // This transaction must be sent by the initialized admin account
+        const data = await medicineContract.methods.viewComplaints().call({ from: defaultAccount }); 
         
         const result = data[0].map((_, i) => ({
             id: data[0][i].toString(),
@@ -315,7 +328,7 @@ app.get("/viewComplaints", async (req, res) => {
         res.json(result);
     } catch (err) {
         console.error("Error in /viewComplaints:", err.message);
-        res.status(500).json({ error: "Failed to fetch complaints. Ensure the contract is initialized and defaultAccount is the admin." });
+        res.status(500).json({ error: "Failed to fetch complaints. Solution: Use the /initializeAdmin route to set the admin address first." });
     }
 });
 
